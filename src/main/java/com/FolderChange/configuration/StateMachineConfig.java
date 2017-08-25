@@ -17,6 +17,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import com.FolderChange.statem.Events;
 import com.FolderChange.statem.States;
 import com.FolderChange.statem.action.CreateAction;
+import com.FolderChange.statem.action.DeleteAction;
+import com.FolderChange.statem.action.ModifiedAction;
 
 
 @Configuration
@@ -26,7 +28,10 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
 	@Autowired
 	private CreateAction createAction;
-	
+	@Autowired
+	private DeleteAction deleteAction;
+	@Autowired
+	private ModifiedAction modifiedAction;
 	
 	@Bean
 	public Action<States, Events> createAction() {
@@ -48,7 +53,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 			@Override
 			public void execute(StateContext<States, Events> ctx) {
 				logger.info(ctx.getTarget().getId().toString()+" event: modify");
-				
+				modifiedAction.execute();
 			}
 		};
 	    return res;
@@ -61,7 +66,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 			@Override
 			public void execute(StateContext<States, Events> ctx) {
 				logger.info(ctx.getTarget().getId().toString()+" event: delete");
-				
+				deleteAction.execute();
 			}
 		};
 	    return res;
